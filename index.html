@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muhammad Ali Raza — Equity Research & Analytics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200;12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06060f;
+  --bg2:#0c0c1a;
+  --bg3:#111125;
+  --card:rgba(255,255,255,0.04);
+  --card-border:rgba(255,255,255,0.08);
+  --g1:#ffd700;
+  --g2:#ff8c00;
+  --g3:#ff4500;
+  --gtext:linear-gradient(120deg,#ffd700 0%,#ff8c00 55%,#ff4500 100%);
+  --text:#ffffff;
+  --text2:rgba(255,255,255,0.55);
+  --text3:rgba(255,255,255,0.25);
+  --border:rgba(255,255,255,0.07);
+  --font:'Bricolage Grotesque',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:var(--font);font-size:15px;
+  line-height:1.65;font-weight:400;overflow-x:hidden;cursor:none;
+}
+
+/* CURSOR */
+#cursor{position:fixed;width:12px;height:12px;background:var(--g2);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s;mix-blend-mode:screen}
+#cursor-ring{position:fixed;width:40px;height:40px;border:1.5px solid rgba(255,140,0,0.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .12s ease}
+
+/* PROGRESS BAR */
+#progress{position:fixed;top:0;left:0;height:3px;background:var(--gtext);width:0%;z-index:200;transition:width .1s linear}
+
+/* BG ORBS */
+.orb-wrap{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.orb{position:absolute;border-radius:50%;filter:blur(120px);opacity:.18}
+.orb1{width:700px;height:700px;background:radial-gradient(circle,#ff8c00,transparent 70%);top:-200px;right:-200px;animation:drift1 18s ease-in-out infinite alternate}
+.orb2{width:600px;height:600px;background:radial-gradient(circle,#ffd700,transparent 70%);bottom:-150px;left:-150px;animation:drift2 22s ease-in-out infinite alternate}
+.orb3{width:400px;height:400px;background:radial-gradient(circle,#4500ff,transparent 70%);top:40%;left:40%;animation:drift3 28s ease-in-out infinite alternate;opacity:.09}
+@keyframes drift1{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-80px,60px) scale(1.15)}}
+@keyframes drift2{0%{transform:translate(0,0) scale(1)}100%{transform:translate(60px,-80px) scale(1.2)}}
+@keyframes drift3{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-100px,40px) scale(.85)}}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(20px,5vw,80px);height:64px;transition:background .4s,backdrop-filter .4s,border-color .4s;border-bottom:1px solid transparent}
+nav.scrolled{background:rgba(6,6,15,.85);backdrop-filter:blur(20px);border-bottom-color:var(--border)}
+.nav-logo{font-size:20px;font-weight:700;letter-spacing:-.02em;text-decoration:none;color:var(--text)}
+.nav-logo span{background:var(--gtext);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:13px;font-weight:600;letter-spacing:.04em;transition:color .2s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:1px;background:var(--g2);transform:scaleX(0);transform-origin:right;transition:transform .3s}
+.nav-links a:hover{color:var(--text)}
+.nav-links a:hover::after{transform:scaleX(1);transform-origin:left}
+
+/* TICKER */
+.ticker-wrap{overflow:hidden;white-space:nowrap;background:rgba(255,255,255,.03);border-bottom:1px solid var(--border);padding:10px 0;margin-top:64px}
+.ticker-track{display:inline-block;animation:ticker 30s linear infinite}
+.ticker-track span{display:inline-block;padding:0 28px;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
+.ticker-track span.hi{background:var(--gtext);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* HERO */
+#hero{position:relative;z-index:1;min-height:calc(100vh - 64px);display:flex;flex-direction:column;justify-content:center;padding:clamp(60px,8vh,120px) clamp(20px,7vw,100px)}
+.hero-badge{display:inline-flex;align-items:center;gap:10px;padding:8px 18px;border-radius:999px;border:1px solid rgba(255,140,0,.35);background:rgba(255,140,0,.08);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g2);margin-bottom:36px;opacity:0;animation:riseIn .7s .1s forwards}
+.hero-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--g2);animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-name{font-size:clamp(52px,9.5vw,140px);font-weight:800;line-height:.92;letter-spacing:-.04em;clip-path:inset(0 0 100% 0);animation:reveal .9s .25s cubic-bezier(.16,1,.3,1) forwards}
+.hero-name .gw{background:var(--gtext);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:inline-block}
+.hero-name .ow{-webkit-text-stroke:2px rgba(255,255,255,.3);color:transparent;display:inline-block}
+@keyframes reveal{0%{clip-path:inset(0 0 100% 0)}100%{clip-path:inset(0 0 0% 0)}}
+@keyframes riseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.hero-sub{max-width:580px;margin-top:28px;font-size:clamp(15px,1.6vw,18px);font-weight:300;color:var(--text2);line-height:1.7;opacity:0;animation:riseIn .8s .55s forwards}
+.hero-cta{display:flex;gap:16px;margin-top:44px;flex-wrap:wrap;opacity:0;animation:riseIn .8s .7s forwards}
+.btn-grad{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:4px;background:var(--gtext);color:#06060f;font-family:var(--font);font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;transition:transform .2s,box-shadow .2s;box-shadow:0 0 40px rgba(255,140,0,.25)}
+.btn-grad:hover{transform:translateY(-2px);box-shadow:0 8px 60px rgba(255,140,0,.45)}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:4px;border:1.5px solid rgba(255,255,255,.15);color:var(--text);font-family:var(--font);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;transition:border-color .2s,transform .2s,background .2s}
+.btn-ghost:hover{border-color:var(--g2);background:rgba(255,140,0,.06);transform:translateY(-2px)}
+.hero-stats{display:flex;gap:clamp(24px,4vw,64px);margin-top:80px;padding-top:40px;border-top:1px solid var(--border);flex-wrap:wrap;opacity:0;animation:riseIn .8s .9s forwards}
+.stat-val{font-size:clamp(32px,4vw,52px);font-weight:800;letter-spacing:-.03em;line-height:1;background:var(--gtext);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-lbl{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-top:6px}
+
+/* SECTIONS */
+section{position:relative;z-index:1;padding:clamp(70px,8vw,120px) clamp(20px,7vw,100px)}
+.section-divider{border-top:1px solid var(--border)}
+.section-header{display:flex;align-items:baseline;gap:20px;margin-bottom:56px}
+.section-num{font-size:12px;font-weight:700;letter-spacing:.2em;color:var(--text3)}
+.section-title{font-size:clamp(32px,4vw,52px);font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.section-title .g{background:var(--gtext);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* PROJECTS */
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
+.proj-card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:36px 32px;position:relative;overflow:hidden;transition:border-color .3s;transform-style:preserve-3d;will-change:transform;opacity:0;transform:translateY(30px)}
+.proj-card.visible{animation:cardIn .6s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes cardIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.proj-card::before{content:'';position:absolute;inset:0;border-radius:16px;background:var(--gtext);opacity:0;transition:opacity .3s;z-index:-1}
+.proj-card::after{content:'';position:absolute;inset:1px;border-radius:15px;background:var(--bg2);z-index:-1}
+.proj-card:hover{border-color:rgba(255,140,0,.6)}
+.proj-card:hover::before{opacity:1}
+.proj-tag{display:inline-block;padding:5px 14px;border-radius:999px;background:rgba(255,140,0,.12);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g2);margin-bottom:20px;border:1px solid rgba(255,140,0,.25)}
+.proj-title{font-size:24px;font-weight:700;line-height:1.2;margin-bottom:14px}
+.proj-desc{color:var(--text2);font-size:13px;line-height:1.75;margin-bottom:28px}
+.proj-metrics{display:flex;gap:20px;flex-wrap:wrap}
+.pm-val{font-size:26px;font-weight:800;letter-spacing:-.03em;background:var(--gtext);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.pm-val small{font-size:16px}
+.pm-lbl{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-top:2px}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:32px}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,var(--g2) 20%,var(--g1) 80%,transparent)}
+.tl-item{position:relative;padding:0 0 56px 40px;opacity:0;transform:translateX(-20px)}
+.tl-item.visible{animation:slideRight .6s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes slideRight{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+.tl-dot{position:absolute;left:-44px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--gtext);box-shadow:0 0 16px rgba(255,140,0,.6)}
+.tl-dot::before{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(255,140,0,.3)}
+.tl-date{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g2);margin-bottom:8px}
+.tl-role{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:4px}
+.tl-org{font-size:13px;font-weight:600;color:var(--text3);margin-bottom:16px;letter-spacing:.04em}
+.tl-bullets{list-style:none}
+.tl-bullets li{color:var(--text2);font-size:13px;line-height:1.75;padding:6px 0 6px 16px;border-bottom:1px solid rgba(255,255,255,.04);position:relative}
+.tl-bullets li::before{content:'→';position:absolute;left:0;color:var(--text3)}
+.hi{color:#4fffb0!important;font-weight:700}
+
+/* SKILLS */
+.skills-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.skill-card{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:28px 24px;transition:border-color .3s,transform .3s;opacity:0;transform:translateY(20px)}
+.skill-card.visible{animation:cardIn .5s cubic-bezier(.16,1,.3,1) forwards}
+.skill-card:hover{border-color:rgba(255,140,0,.4);transform:translateY(-4px)}
+.skill-card-title{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;background:var(--gtext);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.07)}
+.skill-list{list-style:none}
+.skill-list li{font-size:13px;color:var(--text2);font-weight:500;padding:7px 0;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.04)}
+.skill-list li:last-child{border-bottom:none}
+.skill-list li::before{content:'';width:5px;height:5px;border-radius:1px;background:linear-gradient(135deg,var(--g1),var(--g2));flex-shrink:0}
+
+/* EDUCATION */
+.edu-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+@media(max-width:640px){.edu-grid{grid-template-columns:1fr}}
+.edu-card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:36px 32px}
+.edu-school{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px}
+.edu-degree{font-size:13px;color:var(--text2);margin-bottom:24px}
+.cfa-badge{display:inline-flex;flex-direction:column;padding:20px 24px;border-radius:12px;border:1px solid rgba(255,215,0,.3);background:rgba(255,215,0,.05);margin-bottom:20px;width:100%}
+.cfa-badge .cfa-top{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g1);margin-bottom:4px}
+.cfa-badge .cfa-title{font-size:20px;font-weight:700}
+.cfa-badge .cfa-sub{font-size:12px;color:var(--text2);margin-top:4px}
+.cert-list{list-style:none}
+.cert-item{padding:14px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px}
+.cert-name{font-size:13px;font-weight:600}
+.cert-meta{font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--text3);white-space:nowrap}
+
+/* CONTACT */
+#contact{text-align:center}
+.contact-title{font-size:clamp(42px,7vw,100px);font-weight:800;letter-spacing:-.04em;line-height:.9;margin-bottom:28px}
+.contact-title .g{background:var(--gtext);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.contact-sub{font-size:16px;color:var(--text2);font-weight:300;max-width:480px;margin:0 auto 48px}
+.contact-links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.contact-pill{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:999px;border:1px solid var(--card-border);background:var(--card);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;color:var(--text2);transition:border-color .25s,color .25s,background .25s}
+.contact-pill:hover{border-color:rgba(255,140,0,.5);color:var(--g2);background:rgba(255,140,0,.06)}
+
+/* FOOTER */
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:28px clamp(20px,7vw,100px);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+footer p{font-size:12px;font-weight:500;color:var(--text3)}
+footer .g{background:var(--gtext);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* GRAIN */
+.grain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px}
+
+@media(max-width:640px){.nav-links{display:none}.hero-stats{gap:20px}}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div id="progress"></div>
+<div class="grain"></div>
+<div class="orb-wrap">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<nav id="nav">
+  <a class="nav-logo" href="#hero">Ali<span>Raza</span></a>
+  <ul class="nav-links">
+    <li><a href="#projects">Research</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span class="hi">DCF · DDM · EV/EBITDA · P/E</span><span>Bloomberg Terminal</span>
+    <span class="hi">CFA Level I · Nov 2026</span><span>Python · Tableau · Power BI</span>
+    <span class="hi">PSX Equity Research</span><span>3-Statement Modeling</span>
+    <span class="hi">Precedent Transactions</span><span>ESG Scoring · OLS Regression</span>
+    <span class="hi">M&A Financial Modeling</span><span>IBA Karachi · A&F</span>
+    <span class="hi">DCF · DDM · EV/EBITDA · P/E</span><span>Bloomberg Terminal</span>
+    <span class="hi">CFA Level I · Nov 2026</span><span>Python · Tableau · Power BI</span>
+    <span class="hi">PSX Equity Research</span><span>3-Statement Modeling</span>
+    <span class="hi">Precedent Transactions</span><span>ESG Scoring · OLS Regression</span>
+    <span class="hi">M&A Financial Modeling</span><span>IBA Karachi · A&F</span>
+  </div>
+</div>
+
+<section id="hero">
+  <div class="hero-badge">Available for Opportunities</div>
+  <h1 class="hero-name">
+    <span class="gw">Muhammad</span><br>
+    <span class="ow">Ali</span>&nbsp;<span class="gw">Raza</span>
+  </h1>
+  <p class="hero-sub">Final-year Accounting &amp; Finance student at IBA Karachi. I build institutional-grade equity research on Pakistan's listed companies, model multi-scenario M&amp;A transactions, and turn raw data into decisions.</p>
+  <div class="hero-cta">
+    <a href="mailto:maliraza7023@gmail.com" class="btn-grad">Get in Touch ↗</a>
+    <a href="https://www.linkedin.com/in/alirazaasif/" target="_blank" class="btn-ghost">LinkedIn</a>
+  </div>
+  <div class="hero-stats">
+    <div><div class="stat-val" data-target="4" data-suffix="x">0</div><div class="stat-lbl">Valuation Methods</div></div>
+    <div><div class="stat-val" data-target="30" data-suffix="+">0</div><div class="stat-lbl">Page Research Reports</div></div>
+    <div><div class="stat-val" data-target="5" data-suffix="">0</div><div class="stat-lbl">M&amp;A Scenarios Built</div></div>
+    <div><div class="stat-val" data-target="29" data-suffix="">0</div><div class="stat-lbl">ESG Indicators Scored</div></div>
+    <div><div class="stat-val" data-target="600" data-suffix="+">0</div><div class="stat-lbl">Event Attendees Managed</div></div>
+  </div>
+</section>
+
+<section id="projects" class="section-divider">
+  <div class="section-header reveal">
+    <span class="section-num">01</span>
+    <h2 class="section-title">Research &amp; <span class="g">Projects</span></h2>
+  </div>
+  <div class="projects-grid">
+    <div class="proj-card" style="animation-delay:.05s">
+      <div class="proj-tag">Equity Research</div>
+      <div class="proj-title">Pakistan Oilfields Limited (POL)</div>
+      <p class="proj-desc">Institutional-grade initiation report covering industry structure, regulatory environment, and an 8-year forward outlook FY2020–FY2027E. Four valuation methodologies triangulated to a price target with +1.5% upside.</p>
+      <div class="proj-metrics">
+        <div><div class="pm-val">~30<small>pp</small></div><div class="pm-lbl">Report Length</div></div>
+        <div><div class="pm-val">50<small>+</small></div><div class="pm-lbl">Forecast Line Items</div></div>
+        <div><div class="pm-val">FY27<small>E</small></div><div class="pm-lbl">Horizon</div></div>
+      </div>
+    </div>
+    <div class="proj-card" style="animation-delay:.15s">
+      <div class="proj-tag">M&amp;A Modeling</div>
+      <div class="proj-title">FFBL / FFC Merger Analysis</div>
+      <p class="proj-desc">Five-scenario DCF for the proposed FFBL–FFC merger. Implied enterprise value PKR 66.5Bn, target price PKR 48, with granular NWC modeling and a PKR 118Bn terminal value at 4x EV/EBITDA exit multiple.</p>
+      <div class="proj-metrics">
+        <div><div class="pm-val">66.5<small>Bn</small></div><div class="pm-lbl">EV (PKR)</div></div>
+        <div><div class="pm-val">20.4<small>%</small></div><div class="pm-lbl">WACC</div></div>
+        <div><div class="pm-val">5</div><div class="pm-lbl">Scenarios</div></div>
+      </div>
+    </div>
+    <div class="proj-card" style="animation-delay:.25s">
+      <div class="proj-tag">ESG &amp; Quantitative</div>
+      <div class="proj-title">Tesla ESG Scoring Framework</div>
+      <p class="proj-desc">Proprietary 29-indicator ESG framework across 3 pillars benchmarking 5 global automakers via min-max normalization. OLS regression on ~25 firm-year observations quantified ESG–financial performance correlations.</p>
+      <div class="proj-metrics">
+        <div><div class="pm-val">29</div><div class="pm-lbl">Indicators</div></div>
+        <div><div class="pm-val">5</div><div class="pm-lbl">Automakers</div></div>
+        <div><div class="pm-val">~15<small>pp</small></div><div class="pm-lbl">Write-up</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience" class="section-divider">
+  <div class="section-header reveal">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Work <span class="g">Experience</span></h2>
+  </div>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Feb 2026</div>
+      <div class="tl-role">Product Analyst</div>
+      <div class="tl-org">FullGripEcom</div>
+      <ul class="tl-bullets">
+        <li>Identified <span class="hi">12+ profitable product opportunities</span> by analyzing competitor pricing and sell-through data across 3 niches prior to listing.</li>
+      </ul>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">May 2025</div>
+      <div class="tl-role">Director, Finance &amp; Registrations</div>
+      <div class="tl-org">IBA Accounting Club</div>
+      <ul class="tl-bullets">
+        <li>Managed guest registrations for <span class="hi">600+ attendees</span> at the Vista Summit event.</li>
+        <li>Supported the club's finance team in managing the overall event budget.</li>
+      </ul>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Jun 2025</div>
+      <div class="tl-role">Student Fellow</div>
+      <div class="tl-org">Millennium Campus Network (MCN)</div>
+      <ul class="tl-bullets">
+        <li>Co-led cross-cultural teams of <span class="hi">100+ fellows across 30+ countries</span> on 3 sustainability and poverty-alleviation projects.</li>
+        <li>Produced 3 written briefs and project reports as final deliverables.</li>
+      </ul>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Jun 2024</div>
+      <div class="tl-role">Trainee Data Analyst</div>
+      <div class="tl-org">Fudge Consulting</div>
+      <ul class="tl-bullets">
+        <li>Automated data cleaning pipelines in Python and Excel, <span class="hi">cutting delivery time by 25%</span> (~8 hrs → ~6 hrs per cycle) across 5 recurring client reports.</li>
+        <li>Built 3 client-facing KPI dashboards tracking revenue and sales for 5 clients across 3 sectors.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="skills" class="section-divider">
+  <div class="section-header reveal">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Technical <span class="g">Skills</span></h2>
+  </div>
+  <div class="skills-wrap">
+    <div class="skill-card">
+      <div class="skill-card-title">Finance &amp; Valuation</div>
+      <ul class="skill-list">
+        <li>DCF / DDM / EV·EBITDA / P/E</li>
+        <li>3-Statement Financial Modeling</li>
+        <li>Precedent Transaction Analysis</li>
+        <li>Comparable Company Analysis</li>
+        <li>Sensitivity &amp; Scenario Analysis</li>
+        <li>Bloomberg Terminal</li>
+      </ul>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-title">Data &amp; Analytics</div>
+      <ul class="skill-list">
+        <li>Python — Pandas, NumPy</li>
+        <li>Tableau</li>
+        <li>Power BI</li>
+        <li>Microsoft Excel (Advanced)</li>
+        <li>OLS Regression</li>
+        <li>KPI Dashboard Design</li>
+      </ul>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-title">Research &amp; Writing</div>
+      <ul class="skill-list">
+        <li>Equity Research Reports</li>
+        <li>Financial Reporting &amp; Analysis</li>
+        <li>ESG Scoring Frameworks</li>
+        <li>Porter's Five Forces / SWOT</li>
+        <li>M&amp;A Deal Structuring</li>
+        <li>Long-Form Report Authorship</li>
+      </ul>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-title">Tools &amp; Platforms</div>
+      <ul class="skill-list">
+        <li>Canva / Adobe Photoshop</li>
+        <li>Google Workspace</li>
+        <li>Forage Job Simulations</li>
+        <li>Financial Modeling (Excel)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="education" class="section-divider">
+  <div class="section-header reveal">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Education &amp; <span class="g">Certifications</span></h2>
+  </div>
+  <div class="edu-grid reveal">
+    <div class="edu-card">
+      <div class="edu-school">Institute of Business Administration</div>
+      <div class="edu-degree">BS Accounting &amp; Finance · 2023–2027 · Karachi, Pakistan</div>
+      <div class="cfa-badge">
+        <span class="cfa-top">CFA Program</span>
+        <span class="cfa-title">Level I Candidate</span>
+        <span class="cfa-sub">Sitting November 2026 — Equity valuation, FRA, fixed income &amp; portfolio management</span>
+      </div>
+      <div style="margin-top:16px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:12px">Major Coursework</div>
+        <ul class="skill-list">
+          <li>Financial Modeling</li>
+          <li>Mergers &amp; Acquisitions</li>
+          <li>Security Analysis</li>
+          <li>Regulations &amp; Financial Markets</li>
+          <li>Auditing &amp; Financial Reporting</li>
+        </ul>
+      </div>
+    </div>
+    <div class="edu-card">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:20px">Professional Certifications</div>
+      <ul class="cert-list">
+        <li class="cert-item"><span class="cert-name">Google Data Analytics Professional</span><span class="cert-meta">Google · Aug 2024</span></li>
+        <li class="cert-item"><span class="cert-name">Google Business Intelligence Professional</span><span class="cert-meta">Google · Oct 2024</span></li>
+        <li class="cert-item"><span class="cert-name">Tableau BI Analyst</span><span class="cert-meta">Tableau · Jun 2025</span></li>
+        <li class="cert-item"><span class="cert-name">Accenture Data Analytics &amp; Visualization</span><span class="cert-meta">Forage · Sep 2024</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="section-divider">
+  <div class="contact-title reveal">Open to<br><span class="g">Opportunities.</span></div>
+  <p class="contact-sub reveal">Equity research, data analytics, finance roles — internships, entry-level, and freelance projects in Pakistan and beyond.</p>
+  <div class="contact-links reveal">
+    <a href="mailto:maliraza7023@gmail.com" class="contact-pill">✉ maliraza7023@gmail.com</a>
+    <a href="https://www.linkedin.com/in/alirazaasif/" target="_blank" class="contact-pill">↗ LinkedIn</a>
+    <a href="tel:+923117023800" class="contact-pill">✆ +92 311 702 3800</a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 <span class="g">Muhammad Ali Raza</span></p>
+  <p>IBA Karachi · CFA Candidate · PSX Research</p>
+</footer>
+
+<script>
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'});
+(function loop(){rx+=(mx-rx)*.15;ry+=(my-ry)*.15;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.width='6px';cursor.style.height='6px';ring.style.width='60px';ring.style.height='60px';ring.style.borderColor='rgba(255,140,0,.8)'});
+  el.addEventListener('mouseleave',()=>{cursor.style.width='12px';cursor.style.height='12px';ring.style.width='40px';ring.style.height='40px';ring.style.borderColor='rgba(255,140,0,.5)'});
+});
+
+const bar=document.getElementById('progress');
+window.addEventListener('scroll',()=>{
+  const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  bar.style.width=pct+'%';
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>40);
+});
+
+function animateCount(el){
+  const target=+el.dataset.target,suffix=el.dataset.suffix||'',dur=1600,start=performance.now();
+  (function step(now){
+    const t=Math.min((now-start)/dur,1),ease=1-Math.pow(1-t,4);
+    el.textContent=Math.round(ease*target)+suffix;
+    if(t<1)requestAnimationFrame(step);
+  })(start);
+}
+const cObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){animateCount(e.target);cObs.unobserve(e.target)}})},{threshold:.5});
+document.querySelectorAll('[data-target]').forEach(el=>cObs.observe(el));
+
+const rObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');rObs.unobserve(e.target)}})},{threshold:.1});
+document.querySelectorAll('.reveal,.proj-card,.tl-item,.skill-card').forEach(el=>rObs.observe(el));
+
+document.querySelectorAll('.proj-card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    card.style.transform=`perspective(800px) rotateY(${x*10}deg) rotateX(${-y*8}deg) scale(1.02)`;
+  });
+  card.addEventListener('mouseleave',()=>{card.style.transform='';});
+});
+</script>
+</body>
+</html>
